@@ -61,8 +61,8 @@ import sqlite3
 from tkinter import ttk
 from os.path import realpath
 from tkinter import Button
-from PIL import ImageTk, Image
-from tkcalendar import *
+#from PIL import ImageTk, Image
+#from tkcalendar import *
 
 # this will create the database file 
 connection = sqlite3.connect("MainDataFin.db")
@@ -107,339 +107,7 @@ cursor.execute("""CREATE TABLE IF NOT EXISTS
     SaleRF(SummarryID INTEGER PRIMARY KEY, Project_Name TEXT, Project_Value INTEGER, Material_Expense INTEGER, Instalation_Expense INTEGER, Gross_Profit INTEGER)
     """)
 
-
-
-RegisterPG = Tk()
-RegisterPG.title('Registration Screen')
-RegisterPG.geometry('1366x768')  # full screen 
-RegisterPG.configure(bg="#E6DDC4") #To Change the Window Color
-#btn = Button(Register , text='register' , command= callLogin)
-#btn.pack()
-
-lbl1 = Label(RegisterPG, text=" Registration Screen ", font = "Arial 30")
-lbl1.place(x=353, y=10)
-lbl1.configure(background='yellow',  width=28)
-
-lbl1 = Label(RegisterPG, text="", font = "Arial 20")
-lbl1.place(x=203, y=90)
-lbl1.configure(background='#678983',  width=58, height=18)
-
-lbl2 = Label(RegisterPG, text="Name", font = "Arial 15")
-lbl2.place(x=603, y=110)
-lbl2.configure(background='yellow',  width=12)
-
-lbl3 = Label(RegisterPG, text="Username", font = "Arial 15")
-lbl3.place(x=603, y=220)
-lbl3.configure(background='yellow',  width=12)
-
-lbl4 = Label(RegisterPG, text="Password", font = "Arial 15")
-lbl4.place(x=603, y=330)
-lbl4.configure(background='yellow',  width=12)
-
-lbl5 = Label(RegisterPG, text="Confirm Password", font = "Arial 15")
-lbl5.place(x=573, y=440)
-lbl5.configure(background='yellow',  width=18)
-
-lbl6 = Label(RegisterPG, text="I have an account", font = "Arial 10 ")
-lbl6.place(x=595, y=603)
-lbl6.configure(background='yellow',  width=18)
-
-
-NameInput = StringVar() # This will hold the input in the Username Textbox    
-txtNameInput= Entry(RegisterPG, width=30, textvariable=NameInput, font= "Arial 15")
-txtNameInput.place(x=500, y=155) # label += 45
-
-UsernameInput = StringVar() # This will hold the input in the Username Textbox    
-txtUsernameInput= Entry(RegisterPG, width=30, textvariable=UsernameInput, font= "Arial 15")
-txtUsernameInput.place(x=500, y=265)
-
-PasswordInput = StringVar() # This will hold the input in the Username Textbox    
-txtPasswordInput= Entry(RegisterPG, width=30, textvariable=PasswordInput, font= "Arial 15")
-txtPasswordInput.place(x=500, y=375)
-
-ConfPasswordInput = StringVar() # This will hold the input in the Username Textbox    
-txtConfPasswordInput= Entry(RegisterPG, width=30, textvariable=ConfPasswordInput, font= "Arial 15")
-txtConfPasswordInput.place(x=500, y=485)
-
-
-
-
-def on_enter(e):
-   cmdRegister.config(background='OrangeRed3', foreground= "white")
-   #cmdRegisterL.config(background='OrangeRed3', foreground= "white")
-   #cmdLogin.config(background='OrangeRed3', foreground= "white")
-
-def on_leave(e):
-   cmdRegister.config(background= 'SystemButtonFace', foreground= 'black')
-   #cmdRegisterL.config(background= 'SystemButtonFace', foreground= 'black')
-   #cmdLogin.config(background= 'SystemButtonFace', foreground= 'black')
-
-def on_enter2(e):
-   #cmdRegister.config(background='OrangeRed3', foreground= "white")
-   cmdLogin.config(background='OrangeRed3', foreground= "white")
-
-def on_leave2(e):
-   #cmdRegister.config(background= 'SystemButtonFace', foreground= 'black')
-   cmdLogin.config(background= 'SystemButtonFace', foreground= 'black')
-
-
-global CTRP
-def CheckPass():
-   global CTRP
-   P1 = txtPasswordInput.get()
-   P2 = txtConfPasswordInput.get()
-   if P1 != P2:
-      CTRP = FALSE
-      lblMpass = Label(RegisterPG, text="*Password doesn't match", font = "Arial 10")
-      lblMpass.place(x=500, y=520)
-      lblMpass.configure(background='#678983', foreground='black', width=18)
-   else:
-      CTRP = TRUE
-
-def SaveRegis():
-   #connection = sqlite3.connect('MainData.db')
-   #connection.commit()
-   Nout = txtNameInput.get()
-   Uout = txtUsernameInput.get()
-   P1 = txtPasswordInput.get()
-   cursor.execute("INSERT INTO Registration VALUES (NULL, ?, ?, ?)", (Nout, Uout, P1, ))
-   connection.commit()
-   #connection.close()
-   
-
-
-def RegisterAct():
-   Nout = txtNameInput.get()
-   Uout = txtUsernameInput.get()
-   P1 = txtPasswordInput.get()
-   P2 = txtConfPasswordInput.get()
-   if (len(Nout) == 0) or (len(Uout) == 0) or (len(P1) == 0) or (len(P2) == 0):
-    #print("all boxes must be filled")
-    lblRegAct = Label(RegisterPG, text="all boxes must be filled", font = "Arial 10")
-    lblRegAct.place(x=500, y=520)
-    lblRegAct.configure(background='#678983', foreground='black', width=18)
-   else:
-      CheckPass()
-      if CTRP == TRUE:
-        SaveRegis()
-        callLogin()
-
-def reglogact():
-   callLogin()
-
-
-def loginact():
-   global CTRL
-   CTRL = FALSE
-   global UsernameIP
-   UsernameIP = txtUsernameInputL.get()
-   PasswordIP = txtPasswordInputL.get()
-
-   #connection = sqlite3.connect("MainData.db")
-   #cursor = connection.cursor()
-
-   cursor.execute("SELECT * FROM Registration")
-   results = cursor.fetchall()
-   
-   for result in results:
-      if result[2] == UsernameIP and result[3] == PasswordIP:
-        #print("welcome home")
-        CTRL = TRUE
-      else:
-        lbl7 = Label(loginPG, text="Wrong password and/or username", font = "Arial 10 ")
-        lbl7.place(x=565, y=470)
-        lbl7.configure(background='yellow',  width=25)
-      
-      if CTRL == TRUE:
-        befCallHome()
-      else:
-        lbl7 = Label(loginPG, text="Wrong password and/or username", font = "Arial 10 ")
-        lbl7.place(x=565, y=470)
-        lbl7.configure(background='yellow',  width=25)
-         
-
-   connection.commit()
-   #connection.close()
-
-
-def befCallHome():
-   #loginPG.withdraw()
-   callHome()
-
-
-
-
-cmdRegister = Button(RegisterPG, text="Register", width=20, font= "Arial 15", command=RegisterAct)
-cmdRegister.place(x=555, y=560)
-
-cmdRegister.bind('<Enter>', on_enter)
-cmdRegister.bind('<Leave>', on_leave)
-
-cmdLogin = Button(RegisterPG, text="Log in", width=20, font= "Arial 15", command=reglogact)
-cmdLogin.place(x=555, y=630)#
-
-cmdLogin.bind('<Enter>', on_enter2)
-cmdLogin.bind('<Leave>', on_leave2)
-'''
-cmdLogin = Button(RegisterPG, text="Log in", width=20, font= "Arial 15", command=callHome)
-cmdLogin.place(x=555, y=630)#
-
-cmdLogin.bind('<Enter>', on_enter2)
-cmdLogin.bind('<Leave>', on_leave2)
-'''
-''' Login Page '''
-def bringbackReg():
-   #loginPG.withdraw()
-   RegisterPG.deiconify()
-
-
-def callLogin():
-    global loginPG
-    #RegisterPG.withdraw()
-    loginPG = Tk()
-    loginPG.title("Login screen")
-    loginPG.configure(background= "#E6DDC4")
-    loginPG.geometry('1366x768')
-
-    lbl1L = Label(loginPG, text=" Login Screen ", font = "Arial 30")
-    lbl1L.place(x=353, y=10)
-    lbl1L.configure(background='yellow',  width=28)
-
-    lbl2 = Label(loginPG, text="", font = "Arial 20")
-    lbl2.place(x=203, y=90)
-    lbl2.configure(background='#678983',  width=58, height=18)
-    '''
-    lbl2 = Label(RegisterPG, text="Name", font = "Arial 15")
-    lbl2.place(x=603, y=110)
-    lbl2.configure(background='yellow',  width=12)
-    '''
-    lbl3 = Label(loginPG, text="Username", font = "Arial 15")
-    lbl3.place(x=603, y=220)
-    lbl3.configure(background='yellow',  width=12)
-
-    lbl4 = Label(loginPG, text="Password", font = "Arial 15")
-    lbl4.place(x=603, y=330)
-    lbl4.configure(background='yellow',  width=12)
-    '''
-    lbl5 = Label(RegisterPG, text="Confirm Password", font = "Arial 15")
-    lbl5.place(x=573, y=440)
-    lbl5.configure(background='yellow',  width=18)
-    '''
-    '''
-    NameInput = StringVar() # This will hold the input in the Username Textbox    
-    txtNameInput= Entry(RegisterPG, width=30, textvariable=NameInput, font= "Arial 15")
-    txtNameInput.place(x=500, y=155) # label += 45
-    '''
-    global txtUsernameInputL
-    global txtPasswordInputL
-    UsernameInputL = StringVar() # This will hold the input in the Username Textbox    
-    txtUsernameInputL= Entry(loginPG, width=30, textvariable=UsernameInputL, font= "Arial 15")
-    txtUsernameInputL.place(x=500, y=265)
-
-    PasswordInputL = StringVar() # This will hold the input in the Username Textbox    
-    txtPasswordInputL= Entry(loginPG, width=30, textvariable=PasswordInputL, font= "Arial 15")
-    txtPasswordInputL.place(x=500, y=375)
-    '''
-    ConfPasswordInput = StringVar() # This will hold the input in the Username Textbox    
-    txtConfPasswordInput= Entry(RegisterPG, width=30, textvariable=ConfPasswordInput, font= "Arial 15")
-    txtConfPasswordInput.place(x=500, y=485)
-    '''
-    global cmdLoginL
-    cmdLoginL = Button(loginPG, text="Log in", width=20, font= "Arial 15", command=loginact)
-    cmdLoginL.place(x=555, y=500)#original - 60 
-
-    cmdLoginL.bind('<Enter>', on_enter3)
-    cmdLoginL.bind('<Leave>', on_leave3)
-    global cmdRegisterL
-    cmdRegisterL = Button(loginPG, text="Register", width=20, font= "Arial 15", command=bringbackReg)
-    cmdRegisterL.place(x=555, y=570)
-
-    cmdRegisterL.bind('<Enter>', on_enter4)
-    cmdRegisterL.bind('<Leave>', on_leave4)
-
-    lbl6 = Label(loginPG, text="Back to register screen", font = "Arial 10 ")
-    lbl6.place(x=595, y=543)
-    lbl6.configure(background='yellow',  width=18)
-
-def callHome():
-   #connection = sqlite3.connect('MainData.db')
-   #connection.commit()
-   global homePG
-   #loginPG.withdraw()
-   homePG = Tk()
-   homePG.title("Home Screen")
-   homePG.configure(background="#E6DDC4")
-   homePG.geometry('1366x768')
-
-   befbefcallSaleRecordPG1()
-
-   #connection.commit()
-
-   lblNavb = Label(homePG, text="", font = "Arial 20")
-   lblNavb.place(x=0, y=0)
-   lblNavb.configure(background='#678983',  width=100, height=2)
-   
-   global cmd1H
-   cmd1H =  Button(homePG, text="Manager Application", font = "Arial 25 bold")
-   cmd1H.place(x=8, y=0)
-   cmd1H.configure(  background ="#678983", width=18, foreground="white", borderwidth=0)
-
-   cmd1H.bind('<Enter>', on_enter5)
-   cmd1H.bind('<Leave>', on_leave5)
-   lblCover = Label(homePG, text="", font = "Arial 20")
-   lblCover.place(x=203, y=90)
-   lblCover.configure(background='#678983',  width=58, height=18)
-   
-   ''''''
-   lbl2H =  Label(homePG, text=f"Welcome Home, {UsernameIP} ", font = "Arial 30 bold")
-   lbl2H.place(x=353, y=120)
-   lbl2H.configure(background='#678983',  width=28, foreground='white')
-   
-   global cmdProductT
-   cmdProductT = Button(homePG, text="Add Product Type", width=20, font= "Arial 15", command=callProductT)
-   cmdProductT.place(x=555, y=230)
-   cmdProductT.bind('<Enter>', on_enter6)
-   cmdProductT.bind('<Leave>', on_leave6)
-
-   global cmdCustomerD
-   cmdCustomerD = Button(homePG, text="Add Supplier Record", width=20, font= "Arial 15", command=CallAddS_HP)
-   cmdCustomerD.place(x=555, y=280) # original + 50
-   cmdCustomerD.bind('<Enter>', on_enter7)
-   cmdCustomerD.bind('<Leave>', on_leave7)
-
-   global cmdPaymentS
-   cmdPaymentS = Button(homePG, text="Add Material Type", width=20, font= "Arial 15", command=befCallMaterialA_H)
-   cmdPaymentS.place(x=555, y=330)
-   cmdPaymentS.bind('<Enter>', on_enter8)
-   cmdPaymentS.bind('<Leave>', on_leave8)
-
-   global cmdSupplierR
-   cmdSupplierR = Button(homePG, text="Add Customer Record", width=20, font= "Arial 15", command=callCustA)
-   cmdSupplierR.place(x=555, y=380)
-   cmdSupplierR.bind('<Enter>', on_enter11)
-   cmdSupplierR.bind('<Leave>', on_leave11)
-
-   global cmdAddI
-   cmdAddI = Button(homePG, text="Add Instalasi Record", width=20, font= "Arial 15", command=callInstA)
-   cmdAddI.place(x=555, y=430)
-   cmdAddI.bind('<Enter>', on_enter14)
-   cmdAddI.bind('<Leave>', on_leave14)
-
-   global cmdShowI
-   cmdShowI = Button(homePG, text="Show Sale Insight", width=20, font= "Arial 15", command=reglogact)
-   cmdShowI.place(x=555, y=480)
-   cmdShowI.bind('<Enter>', on_enter9)
-   cmdShowI.bind('<Leave>', on_leave9)
-
-
-   global cmdSaleR
-   cmdSaleR = Button(homePG, text="Add Sale Record", width=25, font= "Arial 15 bold", command=befcallSaleRecordPG1)
-   cmdSaleR.place(x=515, y=605)
-   cmdSaleR.bind('<Enter>', on_enter10)
-   cmdSaleR.bind('<Leave>', on_leave10)
-   #connection.close()
-
-
+#class on_button:
 def on_enter3(e):
    #cmdRegister.config(background='OrangeRed3', foreground= "white")
    cmdLoginL.config(background='OrangeRed3', foreground= "white")
@@ -635,9 +303,359 @@ def on_leave26(e):
    cmdAddRecNext.config(foreground= 'black', background= 'SystemButtonFace')
 
 
-''' Add Product Type Page '''
-def callProductT():
+
+def BefstartRegis():
+   WelcomePG.withdraw()
+   startRegis()
+
+WelcomePG = Tk()
+WelcomePG.title('ProjekKu ID')
+WelcomePG.geometry('1366x768')  # full screen 
+WelcomePG.configure(bg="#E6DDC4") #To Change the Window Color
+#btn = Button(Register , text='register' , command= callLogin)
+#btn.pack()
+
+lbl1 = Label(WelcomePG, text=" Welcome to ProjekKu ID ", font = "Arial 28")
+lbl1.place(x=380, y=250)
+lbl1.configure(background='yellow',  width=28)
+
+cmdWelcom = Button(WelcomePG, text="Enter App", width=20, font= "Arial 15", command=BefstartRegis)
+cmdWelcom.place(x=550, y=350)
+
+
+
+
+def startRegis():
+   global RegisterPG
+   RegisterPG = Tk()
+   RegisterPG.title('Registration Screen')
+   RegisterPG.geometry('1366x768')  # full screen 
+   RegisterPG.configure(bg="#E6DDC4") #To Change the Window Color
+
+   '''Labels part'''
+   lbl1 = Label(RegisterPG, text=" Registration Screen ", font = "Arial 30")
+   lbl1.place(x=353, y=10)
+   lbl1.configure(background='yellow',  width=28)
+
+   lbl1 = Label(RegisterPG, text="", font = "Arial 20")
+   lbl1.place(x=203, y=90)
+   lbl1.configure(background='#678983',  width=58, height=18)
+
+   lbl2 = Label(RegisterPG, text="Name", font = "Arial 15")
+   lbl2.place(x=603, y=110)
+   lbl2.configure(background='yellow',  width=12)
+
+   lbl3 = Label(RegisterPG, text="Username", font = "Arial 15")
+   lbl3.place(x=603, y=220)
+   lbl3.configure(background='yellow',  width=12)
+
+   lbl4 = Label(RegisterPG, text="Password", font = "Arial 15")
+   lbl4.place(x=603, y=330)
+   lbl4.configure(background='yellow',  width=12)
+
+   lbl5 = Label(RegisterPG, text="Confirm Password", font = "Arial 15")
+   lbl5.place(x=573, y=440)
+   lbl5.configure(background='yellow',  width=18)
+
+   lbl6 = Label(RegisterPG, text="I have an account", font = "Arial 10 ")
+   lbl6.place(x=595, y=603)
+   lbl6.configure(background='yellow',  width=18)
+
+   global txtNameInput
+   NameInput = StringVar() # This will hold the input in the Username Textbox    
+   txtNameInput= Entry(RegisterPG, width=30, textvariable=NameInput, font= "Arial 15")
+   txtNameInput.place(x=500, y=155) # label += 45
+   global txtUsernameInput
+   UsernameInput = StringVar() # This will hold the input in the Username Textbox    
+   txtUsernameInput= Entry(RegisterPG, width=30, textvariable=UsernameInput, font= "Arial 15")
+   txtUsernameInput.place(x=500, y=265)
+   global txtPasswordInput
+   PasswordInput = StringVar() # This will hold the input in the Username Textbox    
+   txtPasswordInput= Entry(RegisterPG, width=30, textvariable=PasswordInput, font= "Arial 15")
+   txtPasswordInput.place(x=500, y=375)
+   global txtConfPasswordInput
+   ConfPasswordInput = StringVar() # This will hold the input in the Username Textbox    
+   txtConfPasswordInput= Entry(RegisterPG, width=30, textvariable=ConfPasswordInput, font= "Arial 15")
+   txtConfPasswordInput.place(x=500, y=485)
+   global cmdRegister
+   cmdRegister = Button(RegisterPG, text="Register", width=20, font= "Arial 15", command=RegisterAct)
+   cmdRegister.place(x=555, y=560)
+
+   cmdRegister.bind('<Enter>', on_enter)
+   cmdRegister.bind('<Leave>', on_leave)
+   global cmdLogin
+   cmdLogin = Button(RegisterPG, text="Log in", width=20, font= "Arial 15", command=reglogact)
+   cmdLogin.place(x=555, y=630)#
+
+   cmdLogin.bind('<Enter>', on_enter2)
+   cmdLogin.bind('<Leave>', on_leave2)
+   '''
+   cmdLogin = Button(RegisterPG, text="Log in", width=20, font= "Arial 15", command=callHome)
+   cmdLogin.place(x=555, y=630)#
+
+   cmdLogin.bind('<Enter>', on_enter2)
+   cmdLogin.bind('<Leave>', on_leave2)
+   '''
+
+
+
+def on_enter(e):
+   cmdRegister.config(background='OrangeRed3', foreground= "white")
+   #cmdRegisterL.config(background='OrangeRed3', foreground= "white")
+   #cmdLogin.config(background='OrangeRed3', foreground= "white")
+
+def on_leave(e):
+   cmdRegister.config(background= 'SystemButtonFace', foreground= 'black')
+   #cmdRegisterL.config(background= 'SystemButtonFace', foreground= 'black')
+   #cmdLogin.config(background= 'SystemButtonFace', foreground= 'black')
+
+def on_enter2(e):
+   #cmdRegister.config(background='OrangeRed3', foreground= "white")
+   cmdLogin.config(background='OrangeRed3', foreground= "white")
+
+def on_leave2(e):
+   #cmdRegister.config(background= 'SystemButtonFace', foreground= 'black')
+   cmdLogin.config(background= 'SystemButtonFace', foreground= 'black')
+
+
+global CTRP
+def CheckPass():
+   global CTRP
+   P1 = txtPasswordInput.get()
+   P2 = txtConfPasswordInput.get()
+   if P1 != P2:
+      CTRP = FALSE
+      lblMpass = Label(RegisterPG, text="*Password doesn't match", font = "Arial 10")
+      lblMpass.place(x=500, y=520)
+      lblMpass.configure(background='#678983', foreground='black', width=18)
+   else:
+      CTRP = TRUE
+
+def SaveRegis():
+   #connection = sqlite3.connect('MainData.db')
+   #connection.commit()
+   Nout = txtNameInput.get()
+   Uout = txtUsernameInput.get()
+   P1 = txtPasswordInput.get()
+   cursor.execute("INSERT INTO Registration VALUES (NULL, ?, ?, ?)", (Nout, Uout, P1, ))
+   connection.commit()
+   #connection.close()
    
+
+
+def RegisterAct():
+   Nout = txtNameInput.get()
+   Uout = txtUsernameInput.get()
+   P1 = txtPasswordInput.get()
+   P2 = txtConfPasswordInput.get()
+   if (len(Nout) == 0) or (len(Uout) == 0) or (len(P1) == 0) or (len(P2) == 0):
+    #print("all boxes must be filled")
+    lblRegAct = Label(RegisterPG, text="all boxes must be filled", font = "Arial 10")
+    lblRegAct.place(x=500, y=520)
+    lblRegAct.configure(background='#678983', foreground='black', width=18)
+   else:
+      CheckPass()
+      if CTRP == TRUE:
+        SaveRegis()
+        callLogin()
+        RegisterPG.withdraw()
+
+def reglogact():
+   callLogin()
+   RegisterPG.withdraw()
+
+
+def loginact():
+   global CTRL
+   CTRL = FALSE
+   global UsernameIP
+   UsernameIP = txtUsernameInputL.get()
+   PasswordIP = txtPasswordInputL.get()
+   #connection = sqlite3.connect("MainData.db")
+   #cursor = connection.cursor()
+   cursor.execute("SELECT * FROM Registration")
+   results = cursor.fetchall()
+   for result in results:
+      if result[2] == UsernameIP and result[3] == PasswordIP:
+        #print("welcome home")
+        CTRL = TRUE
+      else:
+        lbl7 = Label(loginPG, text="Wrong password and/or username", font = "Arial 10 ")
+        lbl7.place(x=565, y=470)
+        lbl7.configure(background='yellow',  width=25)
+      
+      if CTRL == TRUE:
+        befCallHome()
+        loginPG.withdraw()
+      else:
+        lbl7 = Label(loginPG, text="Wrong password and/or username", font = "Arial 10 ")
+        lbl7.place(x=565, y=470)
+        lbl7.configure(background='yellow',  width=25)
+   connection.commit()
+   #connection.close()
+
+
+def befCallHome():
+   #loginPG.withdraw()
+   callHome()
+
+
+''' Login Page '''
+def bringbackReg():
+   loginPG.withdraw()
+   RegisterPG.deiconify()
+
+
+def callLogin():
+    global loginPG
+    #RegisterPG.withdraw()
+    loginPG = Tk()
+    loginPG.title("Login screen")
+    loginPG.configure(background= "#E6DDC4")
+    loginPG.geometry('1366x768')
+   #label part 
+    lbl1L = Label(loginPG, text=" Login Screen ", font = "Arial 30")
+    lbl1L.place(x=353, y=10)
+    lbl1L.configure(background='yellow',  width=28)
+
+    lbl2 = Label(loginPG, text="", font = "Arial 20")
+    lbl2.place(x=203, y=90)
+    lbl2.configure(background='#678983',  width=58, height=18)
+    '''
+    lbl2 = Label(RegisterPG, text="Name", font = "Arial 15")
+    lbl2.place(x=603, y=110)
+    lbl2.configure(background='yellow',  width=12)
+    '''
+    lbl3 = Label(loginPG, text="Username", font = "Arial 15")
+    lbl3.place(x=603, y=220)
+    lbl3.configure(background='yellow',  width=12)
+
+    lbl4 = Label(loginPG, text="Password", font = "Arial 15")
+    lbl4.place(x=603, y=330)
+    lbl4.configure(background='yellow',  width=12)
+    '''
+    lbl5 = Label(RegisterPG, text="Confirm Password", font = "Arial 15")
+    lbl5.place(x=573, y=440)
+    lbl5.configure(background='yellow',  width=18)
+    '''
+    '''
+    NameInput = StringVar() # This will hold the input in the Username Textbox    
+    txtNameInput= Entry(RegisterPG, width=30, textvariable=NameInput, font= "Arial 15")
+    txtNameInput.place(x=500, y=155) # label += 45
+    '''
+    global txtUsernameInputL
+    global txtPasswordInputL
+    UsernameInputL = StringVar() # This will hold the input in the Username Textbox    
+    txtUsernameInputL= Entry(loginPG, width=30, textvariable=UsernameInputL, font= "Arial 15")
+    txtUsernameInputL.place(x=500, y=265)
+
+    PasswordInputL = StringVar() # This will hold the input in the Username Textbox    
+    txtPasswordInputL= Entry(loginPG, width=30, textvariable=PasswordInputL, font= "Arial 15")
+    txtPasswordInputL.place(x=500, y=375)
+    '''
+    ConfPasswordInput = StringVar() # This will hold the input in the Username Textbox    
+    txtConfPasswordInput= Entry(RegisterPG, width=30, textvariable=ConfPasswordInput, font= "Arial 15")
+    txtConfPasswordInput.place(x=500, y=485)
+    '''
+    global cmdLoginL
+    cmdLoginL = Button(loginPG, text="Log in", width=20, font= "Arial 15", command=loginact)
+    cmdLoginL.place(x=555, y=500)#original - 60 
+
+    cmdLoginL.bind('<Enter>', on_enter3)
+    cmdLoginL.bind('<Leave>', on_leave3)
+    global cmdRegisterL
+    cmdRegisterL = Button(loginPG, text="Register", width=20, font= "Arial 15", command=bringbackReg)
+    cmdRegisterL.place(x=555, y=570)
+
+    cmdRegisterL.bind('<Enter>', on_enter4)
+    cmdRegisterL.bind('<Leave>', on_leave4)
+
+    lbl6 = Label(loginPG, text="Back to register screen", font = "Arial 10 ")
+    lbl6.place(x=595, y=543)
+    lbl6.configure(background='yellow',  width=18)
+
+def callHome():
+   global homePG
+   homePG = Tk()
+   homePG.title("Home Screen")
+   homePG.configure(background="#E6DDC4")
+   homePG.geometry('1366x768')
+
+   befbefcallSaleRecordPG1()
+
+   #connection.commit()
+
+   lblNavb = Label(homePG, text="", font = "Arial 20")
+   lblNavb.place(x=0, y=0)
+   lblNavb.configure(background='#678983',  width=100, height=2)
+   
+   global cmd1H
+   cmd1H =  Button(homePG, text="Manager Application", font = "Arial 25 bold")
+   cmd1H.place(x=8, y=0)
+   cmd1H.configure(  background ="#678983", width=18, foreground="white", borderwidth=0)
+
+   cmd1H.bind('<Enter>', on_enter5)
+   cmd1H.bind('<Leave>', on_leave5)
+   lblCover = Label(homePG, text="", font = "Arial 20")
+   lblCover.place(x=203, y=90)
+   lblCover.configure(background='#678983',  width=58, height=18)
+   
+   ''''''
+   lbl2H =  Label(homePG, text=f"Welcome Home, {UsernameIP} ", font = "Arial 30 bold")
+   lbl2H.place(x=353, y=120)
+   lbl2H.configure(background='#678983',  width=28, foreground='white')
+   
+   global cmdProductT
+   cmdProductT = Button(homePG, text="Add Product Type", width=20, font= "Arial 15", command=befcallProductT_HP)
+   cmdProductT.place(x=555, y=230)
+   cmdProductT.bind('<Enter>', on_enter6)
+   cmdProductT.bind('<Leave>', on_leave6)
+
+   global cmdCustomerD
+   cmdCustomerD = Button(homePG, text="Add Supplier Record", width=20, font= "Arial 15", command=befCallAddS_HP)
+   cmdCustomerD.place(x=555, y=280) # original + 50
+   cmdCustomerD.bind('<Enter>', on_enter7)
+   cmdCustomerD.bind('<Leave>', on_leave7)
+
+   global cmdPaymentS
+   cmdPaymentS = Button(homePG, text="Add Material Type", width=20, font= "Arial 15", command=befCallMaterialA_HP)
+   cmdPaymentS.place(x=555, y=330)
+   cmdPaymentS.bind('<Enter>', on_enter8)
+   cmdPaymentS.bind('<Leave>', on_leave8)
+
+   global cmdSupplierR
+   cmdSupplierR = Button(homePG, text="Add Customer Record", width=20, font= "Arial 15", command=befcallCustA_HP)
+   cmdSupplierR.place(x=555, y=380)
+   cmdSupplierR.bind('<Enter>', on_enter11)
+   cmdSupplierR.bind('<Leave>', on_leave11)
+
+   global cmdAddI
+   cmdAddI = Button(homePG, text="Add Instalasi Record", width=20, font= "Arial 15", command=befcallInstA_HP)
+   cmdAddI.place(x=555, y=430)
+   cmdAddI.bind('<Enter>', on_enter14)
+   cmdAddI.bind('<Leave>', on_leave14)
+
+   # Show Sale Insight belom jadi 
+   global cmdShowI
+   cmdShowI = Button(homePG, text="Show Sale Insight", width=20, font= "Arial 15", command=befShowInsight_HP)
+   cmdShowI.place(x=555, y=480)
+   cmdShowI.bind('<Enter>', on_enter9)
+   cmdShowI.bind('<Leave>', on_leave9)
+   # --------------
+
+   global cmdSaleR
+   cmdSaleR = Button(homePG, text="Add Sale Record", width=25, font= "Arial 15 bold", command=befcallSaleRecordPG1)
+   cmdSaleR.place(x=515, y=605)
+   cmdSaleR.bind('<Enter>', on_enter10)
+   cmdSaleR.bind('<Leave>', on_leave10)
+   #connection.close()
+
+
+''' Add Product Type Page '''
+def befcallProductT_HP(): 
+   homePG.withdraw()
+   callProductT()
+def callProductT():
    global ProductTPG 
    #homePG.withdraw()
    ProductTPG = Tk()
@@ -658,40 +676,68 @@ def callProductT():
    cmd1H.bind('<Leave>', on_leave5)
 
    lblCover = Label(ProductTPG, text="", font = "Arial 20")
-   lblCover.place(x=203, y=90)
-   lblCover.configure(background='#678983',  width=58, height=19)
+   lblCover.place(x=33, y=150)
+   lblCover.configure(background='#678983',  width=35, height=17)
+
+   lblCover2 = Label(ProductTPG, text="", font = "Arial 20")
+   lblCover2.place(x=743, y=150)
+   lblCover2.configure(background='#678983',  width=35, height=17)
    
    ''''''
 
-   lbl3P = Label(ProductTPG, text="Product Name", font = "Arial 15")
-   lbl3P.place(x=603, y=120)
+   lbl3P = Label(ProductTPG, text="Add Product", font = "Arial 20")
+   lbl3P.place(x=583, y=70)
    lbl3P.configure(background='yellow',  width=12)
 
-   
+   lbl3P = Label(ProductTPG, text="Product Name", font = "Arial 20")
+   lbl3P.place(x=215, y=300)
+   lbl3P.configure(background='yellow',  width=12)
+
+   lbl3P = Label(ProductTPG, text="Product ID*", font = "Arial 20")
+   lbl3P.place(x=215, y=400)
+   lbl3P.configure(background='yellow',  width=12)
+
    global txtProductNIP
    ProductNInput = StringVar() # This will hold the input in the Username Textbox    
    txtProductNIP= Entry(ProductTPG, width=30, textvariable=ProductNInput, font= "Arial 15")
-   txtProductNIP.place(x=500, y=160) # original + 40
+   txtProductNIP.place(x=150, y=360) # original + 40
+
+   global txtProductIDIP
+   ProductIDInput = StringVar() # This will hold the input in the Username Textbox    
+   txtProductIDIP= Entry(ProductTPG, width=30, textvariable=ProductIDInput, font= "Arial 15")
+   txtProductIDIP.place(x=150, y=460) # original + 40
 
    
    global cmdAddRec
    cmdAddRec = Button(ProductTPG, text="Add Record", width=20, font= "Arial 15", command=saveProductT)
-   cmdAddRec.place(x=555, y=240)#original - 60 
+   cmdAddRec.place(x=205, y=540)#original - 60 
    cmdAddRec.bind('<Enter>', on_enter12)
    cmdAddRec.bind('<Leave>', on_leave12)
 
+   global cmdEdRec
+   cmdEdRec = Button(ProductTPG, text="Edit Record", width=20, font= "Arial 15", command=EditProductT)
+   cmdEdRec.place(x=205, y=580)#original - 60 
+   cmdEdRec.bind('<Enter>', on_enter12)
+   cmdEdRec.bind('<Leave>', on_leave12)
+
    global cmdAddMfP
-   cmdAddMfP = Button(ProductTPG, text="Add Material Record", width=20, font= "Arial 15", command=befCallMaterialA_P)
-   cmdAddMfP.place(x=555, y=280)#original - 60 
+   cmdAddMfP = Button(ProductTPG, text="Add Material Record", width=20, font= "Arial 15", command=befCallMaterialA_Pt)
+   cmdAddMfP.place(x=205, y=660)#original - 60 
    cmdAddMfP.bind('<Enter>', on_enter13)
    cmdAddMfP.bind('<Leave>', on_leave13)
+
+   global cmdAddSfP
+   cmdAddSfP = Button(ProductTPG, text="Add Supplier Record", width=20, font= "Arial 15", command=befCallSuppA_Pt)
+   cmdAddSfP.place(x=205, y=620)#original - 60 
+   cmdAddSfP.bind('<Enter>', on_enter13)
+   cmdAddSfP.bind('<Leave>', on_leave13)
 
    ''''''
    #Create a frame to hold the treeview
    global my_Frame
    global TREEP
    my_Frame=Frame(ProductTPG, height = 68, width = 1, background="yellow")
-   my_Frame.place(x=5, y=530)
+   my_Frame.place(x=780, y=200)
       
    TREEP = ttk.Treeview(my_Frame, columns=(1,2), show="headings", height="10")
    TREEP.column(1, stretch=NO, width=90)
@@ -708,7 +754,7 @@ def callProductT():
    global my_Frame3
    global TREEMiP
    my_Frame3=Frame(ProductTPG, height = 68, width = 1, background="yellow")
-   my_Frame3.place(x=805, y=530)
+   my_Frame3.place(x=780, y=380)
       
    TREEMiP = ttk.Treeview(my_Frame3, columns=(1,2,3,4,5), show="headings", height="10")
    TREEMiP.column(1, stretch=NO, width=90)
@@ -732,22 +778,41 @@ def callProductT():
 def saveProductT():
    #connection = sqlite3.connect('MainData.db')
    #connection.commit()
+   global PNout
    PNout = txtProductNIP.get()
-   if (len(PNout) > 0):
+   PIout = txtProductIDIP.get()
+   if (len(PNout) > 0) and (len (PIout) == 0):
       cursor.execute("INSERT INTO ProductT VALUES (NULL, ?)", (PNout, ))
       connection.commit()
       populateP()
       populateMiP()
       clearP()
    else:
+      lbl8P = Label(ProductTPG, text="All boxes must be filled/Product ID must be blank!", font = "Arial 10")
+      lbl8P.place(x=160, y=650)
+      lbl8P.configure(background='#678983',  width=25, foreground='white')
+
+def EditProductT():
+   #connection = sqlite3.connect('MainData.db')
+   #connection.commit()
+   PNout = txtProductNIP.get()
+   PIout = txtProductIDIP.get()
+   if (len(PNout) > 0) and (len(PIout) > 0):
+      cursor.execute(f"UPDATE ProductT SET Product_Name = '{PNout}' WHERE Product_ID = '{PIout}' ")
+      connection.commit()
+      populateP()
+      populateMiP()
+      clearP()
+   else:
       lbl8P = Label(ProductTPG, text="All boxes must be filled", font = "Arial 10")
-      lbl8P.place(x=570, y=540)
+      lbl8P.place(x=160, y=650)
       lbl8P.configure(background='#678983',  width=25, foreground='white')
 
    #connection.close()
 
 def clearP():
    txtProductNIP.delete(0, END)
+   txtProductIDIP.delete(0, END)
 
 def populateP():
    cursor.execute("SELECT * FROM ProductT")
@@ -772,12 +837,12 @@ def CallAddS_PT():
    #ProductTPG.withdraw()
    CallAddS()
 
-def CallAddS_HP():
-   #homePG.withdraw()
+def befCallAddS_HP():
+   homePG.withdraw()
    CallAddS()
 
 def CallAddS():
-   global AddSRPG
+   global AddSPRG
    AddSPRG = Tk()
    AddSPRG.title("Add Supplier Screen")
    AddSPRG.configure(background="#E6DDC4")
@@ -794,42 +859,59 @@ def CallAddS():
 
    cmd1H.bind('<Enter>', on_enter5)
    cmd1H.bind('<Leave>', on_leave5)
-
+   '''
    lblCover = Label(AddSPRG, text="", font = "Arial 20")
    lblCover.place(x=203, y=90)
    lblCover.configure(background='#678983',  width=58, height=19)
+   '''
+   lblCover = Label(AddSPRG, text="", font = "Arial 20")
+   lblCover.place(x=33, y=110)
+   lblCover.configure(background='#678983',  width=35, height=18)
+
+   lblCover2 = Label(AddSPRG, text="", font = "Arial 20")
+   lblCover2.place(x=743, y=110)
+   lblCover2.configure(background='#678983',  width=35, height=18)
    ''''''
+   lbl3M = Label(AddSPRG, text="Add Supplier", font = "Arial 20")
+   lbl3M.place(x=583, y=70)
+   lbl3M.configure(background='yellow',  width=12)
+
+
    lbl3S = Label(AddSPRG, text="Supplier Name", font = "Arial 15")
-   lbl3S.place(x=603, y=120)
+   lbl3S.place(x=215, y=120)
    lbl3S.configure(background='yellow',  width=12)
 
    lbl4S = Label(AddSPRG, text="Address", font = "Arial 15")
-   lbl4S.place(x=603, y=200)
+   lbl4S.place(x=215, y=200)
    lbl4S.configure(background='yellow',  width=12)
 
    lbl5P = Label(AddSPRG, text="Contact No", font = "Arial 15")
-   lbl5P.place(x=603, y=285)
+   lbl5P.place(x=215, y=285)
    lbl5P.configure(background='yellow',  width=12)
 
    lbl6P = Label(AddSPRG, text="Supplier Status", font = "Arial 15")
-   lbl6P.place(x=603, y=370)
+   lbl6P.place(x=215, y=370)
+   lbl6P.configure(background='yellow',  width=12)
+
+   lbl6P = Label(AddSPRG, text="Supplier ID*", font = "Arial 15")
+   lbl6P.place(x=215, y=455)
    lbl6P.configure(background='yellow',  width=12)
 
 
    global txtSupplierNIP
    SupplierNIP = StringVar() # This will hold the input in the Username Textbox    
    txtSupplierNIP= Entry(AddSPRG, width=30, textvariable=SupplierNIP, font= "Arial 15")
-   txtSupplierNIP.place(x=500, y=160)
+   txtSupplierNIP.place(x=130, y=160)
 
    global txtAddIP
    AddIP = StringVar() # This will hold the input in the Username Textbox    
    txtAddIP= Entry(AddSPRG, width=30, textvariable=AddIP, font= "Arial 15")
-   txtAddIP.place(x=500, y=240)
+   txtAddIP.place(x=130, y=240)
 
    global txtContactNIP
    ContactNIP = StringVar() # This will hold the input in the Username Textbox    
    txtContactNIP= Entry(AddSPRG, width=30, textvariable=ContactNIP, font= "Arial 15")
-   txtContactNIP.place(x=500, y=325) #+25
+   txtContactNIP.place(x=130, y=325) #+25
    #
    options = [
       "Active",
@@ -844,28 +926,40 @@ def CallAddS():
    #SupplierSTIP.place(x=500, y=410)
    txtSupplierSTIP= OptionMenu(AddSPRG, SupplierSTIP, *options)
    txtSupplierSTIP.pack()
-   txtSupplierSTIP.place(x=650, y=410)
+   txtSupplierSTIP.place(x=255, y=410)
 
+   global txtSuppIDIP
+   SuppIDIP = StringVar() # This will hold the input in the Username Textbox    
+   txtSuppIDIP= Entry(AddSPRG, width=30, textvariable=SuppIDIP, font= "Arial 15")
+   txtSuppIDIP.place(x=130, y=495) #+25
+
+   '''' ------------  '''
    #drop = OptionMenu(AddSPRG, SupplierSTIP, )
 
 
    #
    global cmdAddSuppOri
    cmdAddSuppOri = Button(AddSPRG, text="Add Supplier", width=20, font= "Arial 15", command=saveSupplier)
-   cmdAddSuppOri.place(x=555, y=565)#original - 60 
+   cmdAddSuppOri.place(x=167, y=540)#original - 60 
    cmdAddSuppOri.bind('<Enter>', on_enter15)
    cmdAddSuppOri.bind('<Leave>', on_leave15)
 
    global cmdAddMfS
    cmdAddMfS = Button(AddSPRG, text="Add Material Record", width=20, font= "Arial 15", command=befCallMaterialA_S)
-   cmdAddMfS.place(x=555, y=650)#original - 60 
+   cmdAddMfS.place(x=167, y=580)#original - 60 
    cmdAddMfS.bind('<Enter>', on_enter16)
    cmdAddMfS.bind('<Leave>', on_leave16)
+
+   global cmdEdSupp
+   cmdEdSupp = Button(AddSPRG, text="Edit Record", width=20, font= "Arial 15", command=editSupplier)
+   cmdEdSupp.place(x=167, y=620)#original - 60 
+   cmdEdSupp.bind('<Enter>', on_enter16)
+   cmdEdSupp.bind('<Leave>', on_leave16)
    ''''''
    global my_Frame2
    global TREES
    my_Frame2=Frame(AddSPRG, height = 68, width = 1, background="yellow")
-   my_Frame2.place(x=5, y=530)
+   my_Frame2.place(x=780, y=130)
       
    TREES = ttk.Treeview(my_Frame2, columns=(1,2,3,4,5), show="headings", height="10")
    TREES.column(1, stretch=NO, width=90)
@@ -890,6 +984,7 @@ def clearS():
    txtAddIP.delete(0, END)
    txtContactNIP.delete(0, END)
    #txtSupplierSTIP.delete(0, END)
+   txtSuppIDIP.delete(0, END)
 
 def saveSupplier():
    #connection = sqlite3.connect('MainData.db')
@@ -898,18 +993,35 @@ def saveSupplier():
    Aout = txtAddIP.get()
    CNOout = txtContactNIP.get()
    STout = SupplierSTIP.get()
-
-   if (len(SNout) > 0):
+   SIDout = txtSuppIDIP.get()
+   if (len(SNout) > 0) and (len(SIDout) == 0):
       cursor.execute("INSERT INTO SupplierR VALUES (NULL, ?, ?, ?, ?)", (SNout, Aout, CNOout, STout, ))
       connection.commit()
       populateS()
       clearS()
    else:
       lbl8P = Label(ProductTPG, text="All boxes must be filled", font = "Arial 10")
-      lbl8P.place(x=570, y=540)
+      lbl8P.place(x=160, y=650)
       lbl8P.configure(background='#678983',  width=25, foreground='white')
    
-   #connection.close()
+def editSupplier():
+   #connection = sqlite3.connect('MainData.db')
+   #connection.commit()
+   SNout = txtSupplierNIP.get()
+   Aout = txtAddIP.get()
+   CNOout = txtContactNIP.get()
+   STout = SupplierSTIP.get()
+   SIDout = txtSuppIDIP.get()
+
+   if (len(SNout) > 0) and (len(SIDout) > 0) :
+      cursor.execute(f"UPDATE SupplierR SET Supplier_Name = '{SNout}', Address = '{Aout}', Contact_NO = '{CNOout}', Supplier_Status = '{STout}' WHERE Supplier_ID = '{SIDout}' ")
+      connection.commit()
+      populateS()
+      clearS()
+   else:
+      lbl8P = Label(ProductTPG, text="All boxes must be filled", font = "Arial 10")
+      lbl8P.place(x=160, y=650)
+      lbl8P.configure(background='#678983',  width=25, foreground='white')
 
 
 
@@ -922,17 +1034,24 @@ def populateS():
       for i in result:
          TREES.insert('', 'end', values=i)
 
+
 ''' Add Material Page '''
-def befCallMaterialA_P():
-   #ProductTPG.withdraw()
+
+
+def befCallMaterialA_Pt():
+   ProductTPG.withdraw()
    callMaterialA()
 
-def befCallMaterialA_H():
-   #homePG.withdraw()
+def befCallSuppA_Pt():
+   ProductTPG.withdraw()
+   CallAddS()
+
+def befCallMaterialA_HP():
+   homePG.withdraw()
    callMaterialA()
 
 def befCallMaterialA_S():
-   #AddSPRG.withdraw()
+   AddSPRG.withdraw()
    callMaterialA()
 
 def callMaterialA():
@@ -955,70 +1074,93 @@ def callMaterialA():
    cmd1H.bind('<Leave>', on_leave5)
 
    lblCover = Label(MaterialAPG, text="", font = "Arial 20")
-   lblCover.place(x=203, y=90)
-   lblCover.configure(background='#678983',  width=58, height=19)
+   lblCover.place(x=33, y=110)
+   lblCover.configure(background='#678983',  width=35, height=18)
+
+   lblCover2 = Label(MaterialAPG, text="", font = "Arial 20")
+   lblCover2.place(x=743, y=110)
+   lblCover2.configure(background='#678983',  width=35, height=18)
    ''''''
+   lbl3M = Label(MaterialAPG, text="Add Material", font = "Arial 20")
+   lbl3M.place(x=583, y=70)
+   lbl3M.configure(background='yellow',  width=12)
+
+
    lbl3M = Label(MaterialAPG, text="Material Name", font = "Arial 15")
-   lbl3M.place(x=603, y=120)
+   lbl3M.place(x=215, y=120) # initial 603 
    lbl3M.configure(background='yellow',  width=12)
 
    lbl4M = Label(MaterialAPG, text="Cost per one", font = "Arial 15")
-   lbl4M.place(x=603, y=200)
+   lbl4M.place(x=215, y=200)
    lbl4M.configure(background='yellow',  width=12)
 
    lbl5M = Label(MaterialAPG, text="Supplier ID", font = "Arial 15")
-   lbl5M.place(x=603, y=280)
+   lbl5M.place(x=215, y=280)
    lbl5M.configure(background='yellow',  width=12)
 
    lbl6M = Label(MaterialAPG, text="Product ID", font = "Arial 15")
-   lbl6M.place(x=603, y=360)
+   lbl6M.place(x=215, y=360)
+   lbl6M.configure(background='yellow',  width=12)
+   
+   lbl6M = Label(MaterialAPG, text="Material ID*", font = "Arial 15")
+   lbl6M.place(x=215, y=440)
    lbl6M.configure(background='yellow',  width=12)
 
-   
    global txtMaterialNIP
    MaterialNInput = StringVar() # This will hold the input in the Username Textbox    
    txtMaterialNIP = Entry(MaterialAPG, width=30, textvariable=MaterialNInput, font= "Arial 15")
-   txtMaterialNIP.place(x=500, y=160) # original + 40
+   txtMaterialNIP.place(x=130, y=160) # original + 40
 
    global txtCostPIP
    CostPIP = StringVar() # This will hold the input in the Username Textbox    
    txtCostPIP= Entry(MaterialAPG, width=30, textvariable=CostPIP, font= "Arial 15")
-   txtCostPIP.place(x=500, y=240)
+   txtCostPIP.place(x=130, y=240)
 
 
    global txtSupplierIDIP
    SupplierIDIP = StringVar() # This will hold the input in the Username Textbox    
    txtSupplierIDIP= Entry(MaterialAPG, width=30, textvariable=SupplierIDIP, font= "Arial 15")
-   txtSupplierIDIP.place(x=500, y=320)
+   txtSupplierIDIP.place(x=130, y=320)
 
    global txtProductIDIP
    ProductIDIP = StringVar() # This will hold the input in the Username Textbox    
    txtProductIDIP= Entry(MaterialAPG, width=30, textvariable=ProductIDIP, font= "Arial 15")
-   txtProductIDIP.place(x=500, y=400)
+   txtProductIDIP.place(x=130, y=400)
 
+   global txtMatIDIP
+   MatIDIP = StringVar() # This will hold the input in the Username Textbox    
+   txtMatIDIP= Entry(MaterialAPG, width=30, textvariable=MatIDIP, font= "Arial 15")
+   txtMatIDIP.place(x=130, y=480)
 
-   global cmdAddRec
+   
    cmdAddRec = Button(MaterialAPG, text="Add Record", width=20, font= "Arial 15", command=saveMaterial)
-   cmdAddRec.place(x=555, y=500)#original - 60 
+   cmdAddRec.place(x=167, y=520)#original - 60 
    cmdAddRec.bind('<Enter>', on_enter17)
    cmdAddRec.bind('<Leave>', on_leave17)
 
    global cmdAddPfM
    cmdAddPfM = Button(MaterialAPG, text="Add Product", width=20, font= "Arial 15", command=callProductT)
-   cmdAddPfM.place(x=555, y=575)#original - 60 
+   cmdAddPfM.place(x=167, y=595)#original - 60 
    cmdAddPfM.bind('<Enter>', on_enter19)
    cmdAddPfM.bind('<Leave>', on_leave19)
 
    global cmdAddSfM
    cmdAddSfM = Button(MaterialAPG, text="Add Supplier", width=20, font= "Arial 15", command=CallAddS_PT)
-   cmdAddSfM.place(x=555, y=650)#original - 60 
+   cmdAddSfM.place(x=167, y=670)#original - 60 
    cmdAddSfM.bind('<Enter>', on_enter18)
    cmdAddSfM.bind('<Leave>', on_leave18)
-   ''' first treeview '''
+
+   global cmdEdMat
+   cmdAddSfM = Button(MaterialAPG, text="Edit Record", width=20, font= "Arial 15", command=editMaterial)
+   cmdAddSfM.place(x=167, y=670)#original - 60 
+   cmdAddSfM.bind('<Enter>', on_enter18)
+   cmdAddSfM.bind('<Leave>', on_leave18)
+
+   ''' Material treeview '''
    global my_Frame4
    global TREEM
    my_Frame4=Frame(MaterialAPG, height = 68, width = 1, background="yellow")
-   my_Frame4.place(x=5, y=530)
+   my_Frame4.place(x=780, y=130)
       
    TREEM = ttk.Treeview(my_Frame4, columns=(1,2,3,4,5), show="headings", height="10")
    TREEM.column(1, stretch=NO, width=90)
@@ -1035,11 +1177,12 @@ def callMaterialA():
    TREEM.heading(3, text="Cost per one")
    TREEM.heading(4, text="Product ID")
    TREEM.heading(5, text="Supplier ID")
-   ''' second treeview (Supplier ID)'''
+
+   ''' Supplier treeview '''
    global my_Frame5
    global TREESfM
-   my_Frame5=Frame(MaterialAPG, height = 68, width = 1, background="yellow")
-   my_Frame5.place(x=805, y=530)
+   my_Frame5=Frame(MaterialAPG, height = 63, width = 1, background="yellow")
+   my_Frame5.place(x=780, y=310)
       
    TREESfM = ttk.Treeview(my_Frame5, columns=(1,2,3,4,5), show="headings", height="10")
    TREESfM.column(1, stretch=NO, width=90)
@@ -1056,11 +1199,11 @@ def callMaterialA():
    TREESfM.heading(3, text="Address")
    TREESfM.heading(4, text="Contact No")
    TREESfM.heading(5, text="Supplier Status")
-   '''Third Treeview (product ID)'''
+   '''Product Treeview'''
    global my_Frame6
    global TREESPfM
-   my_Frame6=Frame(MaterialAPG, height = 68, width = 1, background="yellow")
-   my_Frame6.place(x=5, y=200)
+   my_Frame6=Frame(MaterialAPG, height = 63, width = 1, background="yellow")
+   my_Frame6.place(x=780, y=490)
       
    TREESPfM = ttk.Treeview(my_Frame6, columns=(1,2), show="headings", height="10")
    TREESPfM.column(1, stretch=NO, width=90)
@@ -1086,19 +1229,44 @@ def saveMaterial():
    MCout = MCout_D.replace(' ', '')
    SIout = txtSupplierIDIP.get()
    PIout = txtProductIDIP.get()
-   cursor.execute("INSERT INTO MaterialR VALUES (NULL, ?, ?, ?, ?)", (MNout, MCout, PIout, SIout))
-   connection.commit()
-   populateM()
-   populateSfM()
-   populatePfM
-   clearM()
-   '''
+   MatIDout = txtMatIDIP.get()
+
+   if (len(MNout) > 0) and (len(MatIDout) == 0):
+      cursor.execute("INSERT INTO MaterialR VALUES (NULL, ?, ?, ?, ?)", (MNout, MCout, PIout, SIout))
+      connection.commit()
+      populateM()
+      populateSfM()
+      populatePfM
+      clearM()
+   else:
+      lbl8P = Label(MaterialAPG, text="All boxes must be filled or Material ID must be blank", font = "Arial 10")
+      lbl8P.place(x=160, y=650)
+      lbl8P.configure(background='#678983',  width=30, foreground='white')
+      #connection.close()
+
+
+def editMaterial(): 
+   #connection = sqlite3.connect('MainData.db')
+   #connection.commit()
+   MNout = txtMaterialNIP.get()
+   MCout_D = txtCostPIP.get()
+   MCout = MCout_D.replace(' ', '')
+   SIout = txtSupplierIDIP.get()
+   PIout = txtProductIDIP.get()
+   MatIDout = txtMatIDIP.get()
+   
+   if (len(MNout) > 0) and (len(MatIDout) > 0):
+      cursor.execute(f"UPDATE MaterialR SET Material_Name = '{MNout}', Price_per_one = '{MCout}', Product_ID = '{PIout}', Supplier_ID = '{SIout}' WHERE Material_ID = '{MatIDout}' ")
+      connection.commit()
+      populateM()
+      populateSfM()
+      populatePfM
+      clearM()
    else:
       lbl8P = Label(MaterialAPG, text="All boxes must be filled", font = "Arial 10")
-      lbl8P.place(x=570, y=540)
+      lbl8P.place(x=160, y=650)
       lbl8P.configure(background='#678983',  width=25, foreground='white')
-   '''
-   #connection.close()
+      #connection.close()
 
 def populateM():
    cursor.execute("SELECT * FROM MaterialR")
@@ -1134,6 +1302,9 @@ def clearM():
    txtProductIDIP.delete(0, END)
 
 ''' add customer page '''
+def befcallCustA_HP(): 
+   homePG.withdraw()
+   callCustA()
 def callCustA(): 
    global CustAPG
    CustAPG = Tk()
@@ -1145,6 +1316,14 @@ def callCustA():
    lblNavb.place(x=0, y=0)
    lblNavb.configure(background='#678983',  width=100, height=2)
    
+   lblCover = Label(CustAPG, text="", font = "Arial 20")
+   lblCover.place(x=33, y=110)
+   lblCover.configure(background='#678983',  width=35, height=18)
+
+   lblCover2 = Label(CustAPG, text="", font = "Arial 20")
+   lblCover2.place(x=743, y=110)
+   lblCover2.configure(background='#678983',  width=35, height=18)
+
    global cmd1H
    cmd1H =  Button(CustAPG, text="Manager Application", font = "Arial 25 bold", command=callHome)
    cmd1H.place(x=8, y=0)
@@ -1153,21 +1332,25 @@ def callCustA():
    cmd1H.bind('<Enter>', on_enter5)
    cmd1H.bind('<Leave>', on_leave5)
 
-   lblCover = Label(CustAPG, text="", font = "Arial 20")
-   lblCover.place(x=203, y=90)
-   lblCover.configure(background='#678983',  width=58, height=19)
    ''''''
+   lbl3M = Label(CustAPG, text="Add Customer", font = "Arial 20")
+   lbl3M.place(x=583, y=70)
+   lbl3M.configure(background='yellow',  width=12)
 
    lbl3C = Label(CustAPG, text="Customer Name", font = "Arial 15")
-   lbl3C.place(x=593, y=120)
+   lbl3C.place(x=215, y=120)
    lbl3C.configure(background='yellow',  width=15)
 
    lbl4C = Label(CustAPG, text="Address", font = "Arial 15")
-   lbl4C.place(x=603, y=200)
+   lbl4C.place(x=215, y=200)
    lbl4C.configure(background='yellow',  width=12)
 
    lbl5C = Label(CustAPG, text="Contact Number", font = "Arial 15")
-   lbl5C.place(x=593, y=280)
+   lbl5C.place(x=215, y=280)
+   lbl5C.configure(background='yellow',  width=15)
+
+   lbl5C = Label(CustAPG, text="Customer ID*", font = "Arial 15")
+   lbl5C.place(x=215, y=360)
    lbl5C.configure(background='yellow',  width=15)
 
    
@@ -1175,29 +1358,41 @@ def callCustA():
    global txtCustNIP
    CustNInput = StringVar() # This will hold the input in the Username Textbox    
    txtCustNIP = Entry(CustAPG, width=30, textvariable=CustNInput, font= "Arial 15")
-   txtCustNIP.place(x=500, y=160) # original + 40
+   txtCustNIP.place(x=130, y=160) # original + 40
 
    global txtAddCIP
    AddCIP = StringVar() # This will hold the input in the Username Textbox    
    txtAddCIP= Entry(CustAPG, width=30, textvariable=AddCIP, font= "Arial 15")
-   txtAddCIP.place(x=500, y=240)
+   txtAddCIP.place(x=130, y=240)
 
 
    global txtCUNOIP
    CUNOIP = StringVar() # This will hold the input in the Username Textbox    
    txtCUNOIP= Entry(CustAPG, width=30, textvariable=CUNOIP, font= "Arial 15")
-   txtCUNOIP.place(x=500, y=320)
+   txtCUNOIP.place(x=130, y=320)
+
+   global txtCustIDIP
+   CustIDIP = StringVar() # This will hold the input in the Username Textbox    
+   txtCustIDIP= Entry(CustAPG, width=30, textvariable=CustIDIP, font= "Arial 15")
+   txtCustIDIP.place(x=130, y=400)
 
 
    global cmdAddCu
    cmdAddCu = Button(CustAPG, text="Add Customer", width=20, font= "Arial 15", command=saveCU)
-   cmdAddCu.place(x=555, y=575)#original - 60 
+   cmdAddCu.place(x=167, y=480)#original - 60 
    cmdAddCu.bind('<Enter>', on_enter20)
    cmdAddCu.bind('<Leave>', on_leave20)
+
+   global cmdEditCu
+   cmdEditCu = Button(CustAPG, text="Edit Record", width=20, font= "Arial 15", command=editCU)
+   cmdEditCu.place(x=167, y=560)#original - 60 
+   cmdEditCu.bind('<Enter>', on_enter20)
+   cmdEditCu.bind('<Leave>', on_leave20)
+
    global my_Frame6
    global TREEC
    my_Frame6=Frame(CustAPG, height = 68, width = 1, background="yellow")
-   my_Frame6.place(x=5, y=530)
+   my_Frame6.place(x=780, y=130)
       
    TREEC = ttk.Treeview(my_Frame6, columns=(1,2,3,4), show="headings", height="10")
    TREEC.column(1, stretch=NO, width=90)
@@ -1221,10 +1416,41 @@ def saveCU():
    CNout = txtCustNIP.get()
    CAout = txtAddCIP.get()
    cNOout = txtCUNOIP.get()
-   cursor.execute("INSERT INTO CustomerR VALUES (NULL, ?, ?, ?)", (CNout, CAout, cNOout))
-   connection.commit()
-   populateC()
-   #connection.close()
+   CustIDout = txtCustIDIP.get()
+   
+   if (len(CNout) > 0) and (len(CustIDout) == 0) :
+      cursor.execute("INSERT INTO CustomerR VALUES (NULL, ?, ?, ?)", (CNout, CAout, cNOout))
+      connection.commit()
+      populateC()
+      clearC()
+   else:
+      lbl8P = Label(CustAPG, text="All boxes must be filled", font = "Arial 10")
+      lbl8P.place(x=160, y=650)
+      lbl8P.configure(background='#678983',  width=25, foreground='white')
+
+def clearC(): 
+   txtCustNIP.delete(0, END)
+   txtAddCIP.delete(0, END)
+   txtCUNOIP.delete(0, END)
+   txtCustIDIP.delete(0, END)
+
+def editCU():
+   #connection = sqlite3.connect('MainData.db')
+   #connection.commit()
+   CNout = txtCustNIP.get()
+   CAout = txtAddCIP.get()
+   cNOout = txtCUNOIP.get()
+   CustIDout = txtCustIDIP.get()
+   
+   if (len(CNout) > 0) and (len(CustIDout) > 0) :
+      cursor.execute(f"UPDATE CustomerR SET Customer_Name = '{CNout}', Address = '{CAout}', Contact_Number = '{cNOout}' WHERE Customer_ID = '{CustIDout}' ")
+      connection.commit()
+      populateC()
+      clearC()
+   else:
+      lbl8P = Label(CustAPG, text="All boxes must be filled", font = "Arial 10")
+      lbl8P.place(x=160, y=650)
+      lbl8P.configure(background='#678983',  width=25, foreground='white')
 
 def populateC(): 
    cursor.execute("SELECT * FROM CustomerR")
@@ -1236,6 +1462,10 @@ def populateC():
          TREEC.insert('', 'end', values=i)
 
 ''' Instalasi Page '''
+def befcallInstA_HP(): 
+   homePG.withdraw()
+   callInstA()
+
 def callInstA(): 
    global InstAPG
    InstAPG = Tk()
@@ -1256,43 +1486,64 @@ def callInstA():
    cmd1H.bind('<Leave>', on_leave5)
 
    lblCover = Label(InstAPG, text="", font = "Arial 20")
-   lblCover.place(x=203, y=90)
-   lblCover.configure(background='#678983',  width=58, height=19)
-   ''''''
+   lblCover.place(x=33, y=110)
+   lblCover.configure(background='#678983',  width=35, height=18)
 
-   lbl3I = Label(InstAPG, text="Jenis Pekerjaan", font = "Arial 15")
-   lbl3I.place(x=593, y=120)
+   lblCover2 = Label(InstAPG, text="", font = "Arial 20")
+   lblCover2.place(x=743, y=110)
+   lblCover2.configure(background='#678983',  width=35, height=18)
+   ''''''
+   lbl3M = Label(InstAPG, text="Add Labour Cost", font = "Arial 20")
+   lbl3M.place(x=523, y=70)
+   lbl3M.configure(background='yellow',  width=20)
+
+   lbl3I = Label(InstAPG, text="Type of Job", font = "Arial 15")
+   lbl3I.place(x=215, y=120)
    lbl3I.configure(background='yellow',  width=15)
 
-   lbl4I = Label(InstAPG, text="Gaji Per Hari", font = "Arial 15")
-   lbl4I.place(x=603, y=200)
+   lbl4I = Label(InstAPG, text="Wage per day", font = "Arial 15")
+   lbl4I.place(x=215, y=200)
    lbl4I.configure(background='yellow',  width=12)
 
-
+   lbl4I = Label(InstAPG, text="Job ID*", font = "Arial 15")
+   lbl4I.place(x=215, y=280)
+   lbl4I.configure(background='yellow',  width=12)
    
 
    global txtPekJIP
    PekJInput = StringVar() # This will hold the input in the Username Textbox    
    txtPekJIP = Entry(InstAPG, width=30, textvariable=PekJInput, font= "Arial 15")
-   txtPekJIP.place(x=500, y=160) # original + 40
+   txtPekJIP.place(x=130, y=160) # original + 40
 
    global txtGajiIP
    GajiIP = StringVar() # This will hold the input in the Username Textbox    
    txtGajiIP= Entry(InstAPG, width=30, textvariable=GajiIP, font= "Arial 15")
-   txtGajiIP.place(x=500, y=240)
+   txtGajiIP.place(x=130, y=240)
 
-
+   
+   global txtPekID
+   PekID = StringVar() # This will hold the input in the Username Textbox    
+   txtPekID= Entry(InstAPG, width=30, textvariable=PekID, font= "Arial 15")
+   txtPekID.place(x=130, y=320)
 
    global cmdAddIns
    cmdAddIns = Button(InstAPG, text="Add Instalation Record", width=20, font= "Arial 15", command=saveIns)
-   cmdAddIns.place(x=555, y=575)#original - 60 
+   cmdAddIns.place(x=167, y=480)#original - 60 
    cmdAddIns.bind('<Enter>', on_enter24)
    cmdAddIns.bind('<Leave>', on_leave24)
+
+   global cmdEditIns
+   cmdEditIns = Button(InstAPG, text="Edit Record", width=20, font= "Arial 15", command=editIns)
+   cmdEditIns.place(x=167, y=560)#original - 60 
+   cmdEditIns.bind('<Enter>', on_enter24)
+   cmdEditIns.bind('<Leave>', on_leave24)
+
+
    ''''''
    global my_Frame7
    global TREEI
    my_Frame7=Frame(InstAPG, height = 68, width = 1, background="yellow")
-   my_Frame7.place(x=5, y=530)
+   my_Frame7.place(x=780, y=130)
       
    TREEI = ttk.Treeview(my_Frame7, columns=(1,2,3), show="headings", height="10")
    TREEI.column(1, stretch=NO, width=90)
@@ -1313,10 +1564,43 @@ def saveIns():
    JPout = txtPekJIP.get()
    GPHout_D = txtGajiIP.get()
    GPHout = GPHout_D.replace(' ', '')
-   cursor.execute("INSERT INTO Instalasi VALUES (NULL, ?, ?)", (JPout, GPHout))
-   connection.commit()
-   populateI()
-   #connection.close()
+   PekIDout = txtPekID.get()
+
+   if (len(JPout) > 0) and (len(PekIDout) == 0) :
+      cursor.execute("INSERT INTO Instalasi VALUES (NULL, ?, ?)", (JPout, GPHout))
+      connection.commit()
+      populateI()
+      clearI()
+   else:
+      lbl8P = Label(ProductTPG, text="All boxes must be filled", font = "Arial 10")
+      lbl8P.place(x=160, y=650)
+      lbl8P.configure(background='#678983',  width=25, foreground='white')
+
+
+
+def editIns():
+   #connection = sqlite3.connect('MainData.db')
+   #connection.commit()
+   JPout = txtPekJIP.get()
+   GPHout_D = txtGajiIP.get()
+   GPHout = GPHout_D.replace(' ', '')
+   PekIDout = txtPekID.get()
+   
+   if (len(JPout) > 0) and (len(PekIDout) > 0) :
+      cursor.execute(f"UPDATE Instalasi SET Pekerja_Name = '{JPout}', Gaji_Per_Hari = '{GPHout}' WHERE Pekerja_ID = '{PekIDout}' ")
+      connection.commit()
+      populateI()
+      clearI()
+   else:
+      lbl8P = Label(ProductTPG, text="All boxes must be filled", font = "Arial 10")
+      lbl8P.place(x=160, y=650)
+      lbl8P.configure(background='#678983',  width=25, foreground='white')
+
+def clearI(): 
+   txtPekJIP.delete(0, END)
+   txtGajiIP.delete(0, END)
+   txtPekID.delete(0, END)
+
 
 def populateI(): 
    cursor.execute("SELECT * FROM Instalasi")
@@ -1338,6 +1622,10 @@ def populateI():
 4. Customer_ID [dropdown]
 5. Transport cost - textbox
 '''
+def befCallRECPG1_HP(): 
+   callRECPG1()
+   homePG.withdraw()
+
 def callRECPG1(): 
    #connection = sqlite3.connect('MainData.db')
    #connection.commit()
@@ -1407,14 +1695,19 @@ def callRECPG1():
    cursor.execute("SELECT Product_Name FROM ProductT")
    global resultPN
    resultPN = cursor.fetchall()
-
+   '''
    ProductNPick = StringVar() # This will hold the input in the Username Textbox    
    ProductNPick.set(resultPN[0])
+   '''
 
+   # 
    #SupplierSTIP.place(x=500, y=410)
-   txtProductNPick= OptionMenu(AddRecPG1, ProductNPick, *resultPN)
+   #txtProductNPick= OptionMenu(AddRecPG1, ProductNPick, *resultPN)
+   txtProductNPick= ttk.Combobox(AddRecPG1)
+   txtProductNPick.set("Pick a product")
+   txtProductNPick['values'] = resultPN
    txtProductNPick.pack()
-   txtProductNPick.place(x=650, y=320)
+   txtProductNPick.place(x=600, y=320)
 
    # dropdown two 
    cursor.execute("SELECT Customer_Name FROM CustomerR")
@@ -1423,13 +1716,19 @@ def callRECPG1():
 
    global txtCustomerNPick
    global CustomerNPick
-
+   '''
    CustomerNPick = StringVar() # This will hold the input in the Username Textbox    
    CustomerNPick.set(resultCN[0])
 
    txtCustomerNPick= OptionMenu(AddRecPG1, CustomerNPick, *resultCN)
    txtCustomerNPick.pack()
    txtCustomerNPick.place(x=650, y=400)
+   '''
+   txtCustomerNPick= ttk.Combobox(AddRecPG1)
+   txtCustomerNPick.set("Pick a customer")
+   txtCustomerNPick['values'] = resultCN
+   txtCustomerNPick.pack()
+   txtCustomerNPick.place(x=600, y=400)
    
    # back to textbox 
    global txtTCIP
@@ -1494,19 +1793,25 @@ def clearSR1():
 def saveSaleRecord1():
    #connection = sqlite3.connect('MainData.db')
    #connection.commit()
+
+
    ''' Take Product ID and Customer ID '''
-   ProdNameDraft = ProductNPick.get()
-   new_ProdNameDraft = eval(ProdNameDraft)
+   ProdNameDraft = txtProductNPick.get()
+   print(ProdNameDraft)
+   print(type(ProdNameDraft))
+   #new_ProdNameDraft = eval(ProdNameDraft)
+   new_ProdNameDraft = ProdNameDraft
    global C_ProdName
-   C_ProdName = new_ProdNameDraft[0]
+   C_ProdName = new_ProdNameDraft
+   print(f"first = {C_ProdName}")
    #print(C_ProdName)
    #connection.commit()
    cursor.execute(f"SELECT Product_ID FROM ProductT WHERE Product_Name = '{C_ProdName}' ")
    resultPI_raw = cursor.fetchall()
-   #print(f"Product ID result => {resultPI_raw}")
 
-   CustNameDraft = CustomerNPick.get()
-   new_CustNameDraft = eval(CustNameDraft)
+   CustNameDraft = txtCustomerNPick.get()
+   #new_CustNameDraft = eval(CustNameDraft)
+   new_CustNameDraft = CustNameDraft
    C_CustName = new_CustNameDraft[0]
    cursor.execute(f"SELECT Customer_ID FROM CustomerR WHERE Customer_Name = '{C_CustName}' ")
    resultCI = cursor.fetchall()
@@ -1514,10 +1819,12 @@ def saveSaleRecord1():
 
    ''''''
    global PIoutSR
-   PIoutSR = resultPI_raw[0]
+   #PIoutSR = resultPI_raw[0]
+   PIoutSR = resultPI_raw
    #print(type(PIoutSR))
    #print(f' new number => {PIoutSR[0]}')
-   CIout = resultCI[0]
+   #CIout = resultCI[0]
+   CIout = resultCI
 
    global PRNout
    global PVout_D 
@@ -1525,8 +1832,10 @@ def saveSaleRecord1():
    PRNout = txtProjectNIP.get()
    PRDout = txtProjectDIP.get()
    global PIoutSR_F
-   PIoutSR_F = PIoutSR[0]
-   CIout_F = CIout[0]
+   PIoutSR_F = ', '.join(str(item[0]) for item in PIoutSR)
+   print(f"type of PIoutSR_F = {type(PIoutSR_F)}")
+   #CIout_F = CIout[0]
+   CIout_F = ', '.join(str(item[0]) for item in CIout)
    TCout_D = txtTCIP.get()
    global TCout
    TCout = TCout_D.replace(' ', '')
@@ -1547,7 +1856,7 @@ def saveSaleRecord1():
       connection.commit()
       clearSR1()
       getMName()
-      callRECPG2()
+      befcallRECPG2()
    else:
       lbl8P = Label(AddRecPG1, text="All boxes must be filled", font = "Arial 10")
       lbl8P.place(x=570, y=540)
@@ -1599,22 +1908,30 @@ def befbefcallSaleRecordPG1():
    global resultCNA
    resultCNA = cursor.fetchall()
 
+   cursor.execute("SELECT * FROM Instalasi")
+   global resultINA
+   resultINA = cursor.fetchall()
+
 
    global resultPNNumb
    global resultCNNumb
+   global resultINNumb
 
    resultPNNumb = len(resultPNA)
    resultCNNumb = len(resultCNA)
+   resultINNumb = len(resultINA)
+   print(resultINNumb)
 
+1
 def befcallSaleRecordPG1():
    befbefcallSaleRecordPG1()
-   if (resultPNNumb < 1) and (resultCNNumb < 1):
-      lblW = Label(homePG, text="Product and Customer Table must first be filled!", font = "Arial 10 ")
+   if (resultPNNumb == 0) and (resultCNNumb == 0) and (resultINNumb == 0):
+      lblW = Label(homePG, text="Product, Customer, Instalasi Table must first be filled!", font = "Arial 10 ")
       lblW.place(x=525, y=580)
       lblW.configure(background='yellow',  width=35)
-   else:
+   elif (resultPNNumb != 0) and (resultCNNumb != 0) and (resultINNumb != 0):
       #print("beyond zero")
-      callRECPG1()
+      befCallRECPG1_HP()
 
 
 ''' Sale Record Page 2 - Choose Material '''
@@ -1639,13 +1956,11 @@ CTRMN9 = 1
 CTRMN10 = 1
 CTRMN11 = 1
 
+def befcallRECPG2():
+   AddRecPG1.withdraw()
+   callRECPG2()
+
 def callRECPG2():
-   '''
-   global CTRMN1
-   global CTRMN2
-   CTRMN1  = 1
-   CTRMN2 = 1
-   '''
    convMname()
    global AddRecPG2
    AddRecPG2 = Tk()
@@ -2594,7 +2909,7 @@ def SaveAndNext():
    
    TOTALPRICE_M = int(TMprice1 + TMprice2 + TMprice3 + TMprice4 + TMprice5 + TMprice6 + TMprice7 + TMprice8 + TMprice9 + TMprice10)
    print(TOTALPRICE_M)
-   callREGPG3()
+   befcallREGPG3()
 
 def e_MPrice():
    global Mprice1F
@@ -3001,6 +3316,10 @@ def redCTR10():
 
 
 ''' Add instalation cost '''
+def befcallREGPG3():
+   AddRecPG2.withdraw()
+   callREGPG3()
+
 def callREGPG3():
    global AddRecPG3
    AddRecPG3 = Tk()
@@ -3034,7 +3353,7 @@ def callREGPG3():
    cursor.execute("SELECT Pekerja_Name FROM Instalasi")
    global resultPekN
    resultPekN = cursor.fetchall()
-
+   '''
    PekerjaNPick = StringVar() # This will hold the input in the Username Textbox    
    PekerjaNPick.set(resultPekN[0])
 
@@ -3042,6 +3361,13 @@ def callREGPG3():
    txtPekerjaNPick= OptionMenu(AddRecPG3, PekerjaNPick, *resultPekN)
    txtPekerjaNPick.pack()
    txtPekerjaNPick.place(x=650, y=160)
+   '''
+   txtPekerjaNPick= ttk.Combobox(AddRecPG3)
+   txtPekerjaNPick.set("Pick job role")
+   txtPekerjaNPick['values'] = resultPekN
+   txtPekerjaNPick.pack()
+   txtPekerjaNPick.place(x=598, y=160)
+
 
    lbl4SR = Label(AddRecPG3, text="Jumlah Pekerja", font = "Arial 15")
    lbl4SR.place(x=603, y=200)
@@ -3071,18 +3397,18 @@ def callREGPG3():
 
 def saveSaleRecord3(): 
    ''' Take Pekerja Gaji'''
-   PekNameDraft = PekerjaNPick.get()
-   new_PekNameDraft = eval(PekNameDraft)
+   PekNameDraft = txtPekerjaNPick.get()
+   new_PekNameDraft = PekNameDraft
    global C_PekName 
-   C_PekName = new_PekNameDraft[0]
+   C_PekName = new_PekNameDraft
    cursor.execute(f"SELECT Gaji_Per_Hari FROM Instalasi WHERE Pekerja_Name = '{C_PekName}' ")
    resultGH_raw = cursor.fetchall()
-   resultGH = resultGH_raw[0]
+   resultGH = ', '.join(str(item[0]) for item in resultGH_raw)
    ''''''
    global resultGH_F 
    global PNUMoutI
    global DNUMoutI
-   resultGH_F = int(resultGH[0])
+   resultGH_F = resultGH
    print(type(resultGH))
    PNUMout_D = txtPekNIP.get()
    PNUMout = PNUMout_D.replace(' ', '')
@@ -3101,7 +3427,7 @@ def saveandreload():
 def saveandsumm():
    saveSaleRecord3()
    clearins()
-   callSummary()
+   befcallSummary()
 
 def clearins():
    txtHariNIP.delete(0, END)
@@ -3111,14 +3437,35 @@ total_instalasi = 0
 
 def add_everything():
    global total_instalasi 
-   total_instalasi_D = resultGH_F * PNUMoutI * DNUMoutI
-   total_instalasi = total_instalasi + total_instalasi_D
-   print(total_instalasi)
+   total_instalasi = 0
+   print(f"INITIAL => {total_instalasi}")
+   # Assuming resultGH_F, PNUMoutI, and DNUMoutI are defined before this function
+   print("resultGH_F:", resultGH_F)
+   print("PNUMoutI:", PNUMoutI)
+   print("DNUMoutI:", DNUMoutI)
+
+   total_instalasi_D = int(resultGH_F) * int(PNUMoutI) * int(DNUMoutI)
+   print("total_instalasi_D (before conversion):", total_instalasi_D)
    
+   # Ensure that total_instalasi_D is a valid numeric value before conversion
+   total_instalasi_D = int(total_instalasi_D)
+
+   print("total_instalasi_D (after conversion):", total_instalasi_D)
+   # Ensure that total_instalasi is an integer before addition
+   if isinstance(total_instalasi, int):
+      total_instalasi = total_instalasi + total_instalasi_D
+      print("total_instalasi:", total_instalasi)
+   else:
+      print("Error: total_instalasi is not an integer.")
 
 
 
 
+
+def befcallSummary(): 
+   AddRecPG3.withdraw()
+   callSummary()
+   
 def callSummary(): 
    global SummPG
    SummPG = Tk()
@@ -3223,7 +3570,11 @@ def callSummary():
 
    global cmdConfRec
    cmdConfRec = Button(SummPG, text="Confirm Record", width=20, font= "Arial 15", command=ConfSumm)
-   cmdConfRec.place(x=555, y=650)#original - 60 
+   cmdConfRec.place(x=505, y=650)#original - 60 
+
+   global cmdNOTConfRec
+   cmdConfRec = Button(SummPG, text="Cancel Input", width=20, font= "Arial 15", command=CancSumm)
+   cmdConfRec.place(x=655, y=650)#original - 60 
 
 def ConfSumm():
    ProjectNF = PRNout
@@ -3235,9 +3586,204 @@ def ConfSumm():
    connection.commit()
    callHome()
 
+def CancSumm():
+   callHome()
+
+''' Show Sale Insight Page'''
+def befShowInsight_HP():
+   homePG.withdraw()
+   CallInsight()
+
+def CallInsight(): 
+   getTotalSalary()
+   getTotalSalary_FY()
+   getSoldProject()
+   findProjName()
+   global InsightPG
+   InsightPG = Tk()
+   InsightPG.title("Show Sale Insight Screen")
+   InsightPG.configure(background="#E6DDC4")
+   InsightPG.geometry('1366x768')
+
+   lblNavb = Label(InsightPG, text="", font = "Arial 20")
+   lblNavb.place(x=0, y=0)
+   lblNavb.configure(background='#678983',  width=100, height=2)
+   
+   global cmd1H
+   cmd1H =  Button(InsightPG, text="Manager Application", font = "Arial 25 bold", command=callHome)
+   cmd1H.place(x=8, y=0)
+   cmd1H.configure(  background ="#678983", width=18, foreground="white", borderwidth=0)
+
+   cmd1H.bind('<Enter>', on_enter5)
+   cmd1H.bind('<Leave>', on_leave5)
+
+   lblCover = Label(InsightPG, text="", font = "Arial 20")
+   lblCover.place(x=203, y=90)
+   lblCover.configure(background='#678983',  width=58, height=19)
+   
+   lbl3SR = Label(InsightPG, text="Sale Insight", font = "Arial 20 bold")
+   lbl3SR.place(x=580, y=100)
+   lbl3SR.configure(background='yellow',  width=15)
+
+   lbl1SM = Label(InsightPG, text= "All Time Gross Profit", font = "Arial 20")
+   lbl1SM.place(x=320, y=160)
+   lbl1SM.configure(background='yellow',  width=20)
+
+   lbl1AM = Label(InsightPG, text= Total_GP_AllT, font = "Arial 20")
+   lbl1AM.place(x=650, y=160)
+   lbl1AM.configure(background='white',  width=25)
+
+   lbl2SM = Label(InsightPG, text= "2024 Gross Profit", font = "Arial 20")
+   lbl2SM.place(x=320, y=220)
+   lbl2SM.configure(background='yellow',  width=20)
+   
+   lbl2AM = Label(InsightPG, text= GP_FY, font = "Arial 20")
+   lbl2AM.place(x=650, y=220)
+   lbl2AM.configure(background='white',  width=25)
+
+   
+   lbl3SM = Label(InsightPG, text= "Most Valuable Project", font = "Arial 20")
+   lbl3SM.place(x=320, y=280)
+   lbl3SM.configure(background='yellow',  width=20)
+   
+   lbl3AM = Label(InsightPG, text= F_ProjName, font = "Arial 20")
+   lbl3AM.place(x=650, y=280)
+   lbl3AM.configure(background='white',  width=25)
+
+   lbl4SM = Label(InsightPG, text= "Highest Project Value", font = "Arial 20")
+   lbl4SM.place(x=320, y=340)
+   lbl4SM.configure(background='yellow',  width=20)
+
+   lbl4AM = Label(InsightPG, text= MostValuablePrj, font = "Arial 20")
+   lbl4AM.place(x=650, y=340)
+   lbl4AM.configure(background='white',  width=25)
+
+   '''
+   lbl5SM = Label(InsightPG, text= "Labour Expense", font = "Arial 20")
+   lbl5SM.place(x=350, y=400)
+   lbl5SM.configure(background='yellow',  width=15) 
+
+   print(f'type pvouti => {type(PVoutI)}')
+   labExp = (PVoutI * 10) // 100
+
+   lbl5AM = Label(InsightPG, text= labExp, font = "Arial 20")
+   lbl5AM.place(x=650, y=400)
+   lbl5AM.configure(background='white',  width=25)
+
+   lbl8SM = Label(InsightPG, text= "Transport Expense", font = "Arial 20")
+   lbl8SM.place(x=350, y=480)
+   lbl8SM.configure(background='yellow',  width=15) 
+
+
+   lbl8AM = Label(SummPG, text= TCout, font = "Arial 20")
+   lbl8AM.place(x=650, y=480)
+   lbl8AM.configure(background='white',  width=25)
+
+   lbl6SM = Label(SummPG, text= "Gross Profit", font = "Arial 20")
+   lbl6SM.place(x=350, y=540)
+   lbl6SM.configure(background='yellow',  width=15)
+   global GrossP
+   GrossP = PVoutI - (labExp + TOTALPRICE_M + total_instalasi + TCoutI)
+   '''
+   global my_Frame8
+   global TREESI
+   my_Frame8=Frame(InsightPG, height = 68, width = 1, background="yellow")
+   my_Frame8.place(x=350, y=450)
+      
+   TREESI = ttk.Treeview(my_Frame8, columns=(1,2,3,4,5,6), show="headings", height="10")
+   TREESI.column(1, stretch=NO, width=90)
+   TREESI.column(2, stretch=NO, width=105)
+   TREESI.column(3, stretch=NO, width=105)
+   TREESI.column(4, stretch=NO, width=105)
+   TREESI.column(5, stretch=NO, width=105)
+   TREESI.column(6, stretch=NO, width=105)
+   
+   #tree.column("# 1",anchor=CENTER, stretch=NO, width=100)
+   TREESI.pack()
+
+   TREESI.heading(1, text="Project ID")
+   TREESI.heading(2, text="Project Name")
+   TREESI.heading(3, text="Project Value")
+   TREESI.heading(4, text="Material Expense")
+   TREESI.heading(5, text="Labour Expense")
+   TREESI.heading(6, text="Gross Profit")
+   populateSI()
+
+def populateSI(): 
+   cursor.execute("SELECT * FROM SaleRF")
+   result = cursor.fetchall()
+   for record in TREESI.get_children():
+      TREESI.delete(record)
+   if len(result) != 0:
+      for i in result:
+         TREESI.insert('', 'end', values=i)
+
+
+def getTotalSalary(): 
+   global Total_GP_AllT
+   cursor.execute("SELECT Gross_Profit FROM SaleRF")
+   Proj_Value_Init = cursor.fetchall()
+   #print(f"Initial = {Proj_Value_Init}")
+   #print(f"type = {type(Proj_Value_Init)1}")
+   #for x in Proj
+   Total_GP_AllT = total_sum_of_numeric_values(Proj_Value_Init)
+   print(Total_GP_AllT)
+
+def getTotalSalary_FY(): 
+   global GP_FY
+   cursor.execute("""SELECT Gross_Profit FROM SaleRF 
+                     INNER JOIN SaleR ON SaleRF.Project_Value = SaleR.Project_Value 
+                     WHERE substr(Project_Date, 7, 4) = '2024'""")
+   Proj_Value_FY = cursor.fetchall()
+   print(f"Initial PV 2024 = {Proj_Value_FY}")
+   GP_FY = total_sum_of_numeric_values(Proj_Value_FY)
+   
+def getSoldProject(): 
+   global CTR_SProj
+   global ARR_Sold_proj
+   global MostValuablePrj
+   cursor.execute("SELECT Gross_Profit FROM SaleRF")
+   Sold_proj = cursor.fetchall()
+   #print(Sold_proj)
+   #print(type(Sold_proj))
+   ARR_Sold_proj = [value[0] for value in Sold_proj]
+   print(f"old = {ARR_Sold_proj}")
+   CTR_SProj = len(ARR_Sold_proj)
+   Sorted_ARR_SPrj = bubble_sort(ARR_Sold_proj.copy())
+   print(f"NEW = {Sorted_ARR_SPrj}")
+   MostValuablePrj = Sorted_ARR_SPrj[0]
+   findProjName()
+
+def findProjName(): 
+   global ProjName
+   global F_ProjName
+   cursor.execute(f"SELECT Project_Name FROM SaleRF WHERE Gross_Profit = '{MostValuablePrj}'")
+   ProjName = cursor.fetchall()
+   ARR_Proj_Name = [value[0] for value in ProjName]
+   F_ProjName = ARR_Proj_Name[0]
+
+
+
+def bubble_sort(ARR):
+   for Y in range(CTR_SProj):
+    for X in range(CTR_SProj - 1):
+         if ARR[X+1] > ARR[X]:   
+            TEMP = ARR[X]
+            ARR[X] = ARR[X+1]
+            ARR[X+1] = TEMP
+   return ARR
+
+
+
+def total_sum_of_numeric_values(data):
+   total_sum = 0
+   for item in data:
+      for value in item:
+         total_sum += value
+   return total_sum
 
 #connection.close()
-RegisterPG.mainloop()
+WelcomePG.mainloop()
 
 
 
